@@ -32,7 +32,7 @@ class CombatManager(private val actionChecker: ActionChecker) {
     }
 
     fun heal(adventurer: Adventurer, healAmount: Int) {
-        if(canHeal(adventurer, healAmount)) {
+        if(actionChecker.canHeal(adventurer, healAmount)) {
             applyHeal(adventurer, healAmount)
         }
     }
@@ -43,6 +43,4 @@ class CombatManager(private val actionChecker: ActionChecker) {
             adventurer.health = Adventurer.TOTAL_HEALTH
         }
     }
-
-    private fun canHeal(adventurer: Adventurer, healAmount: Int) = adventurer.isAlive() && healAmount >= 0
 }

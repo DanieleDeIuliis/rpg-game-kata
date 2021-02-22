@@ -1,5 +1,6 @@
 package com.combat
 
+import com.combat.RANGE.*
 import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
@@ -51,7 +52,7 @@ class CombatManagerTest {
 
     @Test
     fun `an adventurer that heals restore the target health'`() {
-        val adventurer = Adventurer(health = 500)
+        val adventurer = Adventurer(health = 500, range = MELEE)
         every { actionChecker.canHeal(adventurer, 100) } returns true
 
         CombatManager(actionChecker, damageCalculator).heal(adventurer, 100)
@@ -62,7 +63,7 @@ class CombatManagerTest {
 
     @Test
     fun `an adventurer that heals can't restore health to a value grater than the maximum amount`() {
-        val adventurer = Adventurer(health = 900)
+        val adventurer = Adventurer(health = 900, range = MELEE)
         every { actionChecker.canHeal(adventurer, 200) } returns true
 
         CombatManager(actionChecker, damageCalculator).heal(adventurer, 200)

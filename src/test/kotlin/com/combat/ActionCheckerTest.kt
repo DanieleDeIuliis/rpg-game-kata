@@ -25,7 +25,7 @@ class ActionCheckerTest {
 
     @Test
     fun `an adventurer can't heal a dead Adventurer'`() {
-        val adventurer = Adventurer(health = 0)
+        val adventurer = Adventurer(health = 0, range = RANGE.MELEE)
 
         assertFalse(ActionChecker().canHeal(adventurer, 200))
     }

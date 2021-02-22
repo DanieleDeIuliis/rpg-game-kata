@@ -4,49 +4,34 @@ import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class CombatManagerTest {
 
     private val actionChecker: ActionChecker = mockk()
 
-    @Test
-    fun `creates and adventurer with default values`() {
-        val adventurer = Adventurer.instance()
 
-        assertThat(adventurer.health).isEqualTo(1000)
-        assertThat(adventurer.level).isEqualTo(1)
-        assertThat(adventurer.isAlive()).isEqualTo(true)
+    @Test
+    fun `when can deal damage, an adventurer damages another one`() {
+        val firstAdventurer = Adventurer.instance()
+        val secondAdventurer = Adventurer.instance()
+        every { actionChecker.canDamage(firstAdventurer, secondAdventurer, 200) } returns true
+
+        CombatManager(actionChecker).damage(firstAdventurer, secondAdventurer, 200)
+
+        assertThat(secondAdventurer.isAlive()).isEqualTo(true)
+        assertThat(secondAdventurer.health).isEqualTo(800)
     }
 
     @Test
-    fun `an adventurer can't inflict a negative damage`() {
+    fun `when can't deal damage, an adventurer does not damage another one`() {
         val firstAdventurer = Adventurer.instance()
         val secondAdventurer = Adventurer.instance()
-        every { actionChecker.canDamage(firstAdventurer, secondAdventurer, -100) } returns false
+        every { actionChecker.canDamage(firstAdventurer, secondAdventurer, -200) } returns false
 
-        CombatManager(actionChecker).damage(firstAdventurer, secondAdventurer, -100)
+        CombatManager(actionChecker).damage(firstAdventurer, secondAdventurer, -200)
 
+        assertThat(secondAdventurer.isAlive()).isEqualTo(true)
         assertThat(secondAdventurer.health).isEqualTo(1000)
-    }
-
-    @Test
-    fun `an adventurer can damage another one`() {
-        val firstAdventurer = Adventurer.instance()
-        val secondAdventurer = Adventurer.instance()
-        every { actionChecker.canDamage(firstAdventurer, secondAdventurer, 100) } returns true
-
-        CombatManager(actionChecker).damage(firstAdventurer, secondAdventurer, 100)
-
-        assertThat(secondAdventurer.health).isEqualTo(900)
-    }
-
-    @Test
-    fun `an adventurer can't damage himself`() {
-        every { actionChecker.canDamage(any(), any(), any()) } throws IllegalCombatAction()
-        val adventurer = Adventurer.instance()
-
-        assertThrows<IllegalCombatAction> { CombatManager(actionChecker).damage(adventurer, adventurer, 200) }
     }
 
     @Test
@@ -85,37 +70,7 @@ class CombatManagerTest {
         assertThat(secondAdventurer.health).isEqualTo(900)
     }
 
-    @Test
-    fun `an adventurer can't heal a dead Adventurer'`() {
-        val adventurer = Adventurer(health = 0)
-        every { actionChecker.canHeal(adventurer, 100) } returns false
 
-        CombatManager(actionChecker).heal(adventurer, 100)
-
-        assertThat(adventurer.isAlive()).isEqualTo(false)
-        assertThat(adventurer.health).isEqualTo(0)
-    }
-
-    @Test
-    fun `an adventurer can't heal a negative damage`() {
-        val adventurer = Adventurer.instance()
-        every { actionChecker.canHeal(adventurer, -100) } returns false
-
-        CombatManager(actionChecker).heal(adventurer, -100)
-
-        assertThat(adventurer.health).isEqualTo(1000)
-    }
-
-    @Test
-    fun `an adventurer that heals can't restore health to a value grater than the maximum amount'`() {
-        val adventurer = Adventurer(health = 900)
-        every { actionChecker.canHeal(adventurer, 200) } returns true
-
-        CombatManager(actionChecker).heal(adventurer, 200)
-
-        assertThat(adventurer.isAlive()).isEqualTo(true)
-        assertThat(adventurer.health).isEqualTo(1000)
-    }
 
     @Test
     fun `an adventurer that heals restore the target health'`() {
@@ -126,5 +81,16 @@ class CombatManagerTest {
 
         assertThat(adventurer.isAlive()).isEqualTo(true)
         assertThat(adventurer.health).isEqualTo(600)
+    }
+
+    @Test
+    fun `an adventurer that heals can't restore health to a value grater than the maximum amount`() {
+        val adventurer = Adventurer(health = 900)
+        every { actionChecker.canHeal(adventurer, 200) } returns true
+
+        CombatManager(actionChecker).heal(adventurer, 200)
+
+        assertThat(adventurer.isAlive()).isEqualTo(true)
+        assertThat(adventurer.health).isEqualTo(1000)
     }
 }

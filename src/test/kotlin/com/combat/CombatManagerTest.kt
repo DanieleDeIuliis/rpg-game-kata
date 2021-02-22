@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test
 class CombatManagerTest {
 
     private val actionChecker: ActionChecker = mockk()
+    private val damageCalculator: DamageCalculator = mockk()
 
 
     @Test
@@ -15,8 +16,9 @@ class CombatManagerTest {
         val firstAdventurer = Adventurer.instance()
         val secondAdventurer = Adventurer.instance()
         every { actionChecker.canDamage(firstAdventurer, secondAdventurer, 200) } returns true
+        every { damageCalculator.computeDamageBasedOnLevel(firstAdventurer, secondAdventurer, 200) } returns 200
 
-        CombatManager(actionChecker).damage(firstAdventurer, secondAdventurer, 200)
+        CombatManager(actionChecker, damageCalculator).damage(firstAdventurer, secondAdventurer, 200)
 
         assertThat(secondAdventurer.isAlive()).isEqualTo(true)
         assertThat(secondAdventurer.health).isEqualTo(800)
@@ -28,7 +30,7 @@ class CombatManagerTest {
         val secondAdventurer = Adventurer.instance()
         every { actionChecker.canDamage(firstAdventurer, secondAdventurer, -200) } returns false
 
-        CombatManager(actionChecker).damage(firstAdventurer, secondAdventurer, -200)
+        CombatManager(actionChecker, damageCalculator).damage(firstAdventurer, secondAdventurer, -200)
 
         assertThat(secondAdventurer.isAlive()).isEqualTo(true)
         assertThat(secondAdventurer.health).isEqualTo(1000)
@@ -39,45 +41,20 @@ class CombatManagerTest {
         val firstAdventurer = Adventurer.instance()
         val secondAdventurer = Adventurer.instance()
         every { actionChecker.canDamage(firstAdventurer, secondAdventurer, 2000) } returns true
+        every { damageCalculator.computeDamageBasedOnLevel(firstAdventurer, secondAdventurer, 2000) } returns 2000
 
-        CombatManager(actionChecker).damage(firstAdventurer, secondAdventurer, 2000)
+        CombatManager(actionChecker, damageCalculator).damage(firstAdventurer, secondAdventurer, 2000)
 
         assertThat(secondAdventurer.isAlive()).isEqualTo(false)
         assertThat(secondAdventurer.health).isEqualTo(0)
     }
 
     @Test
-    fun `when an adventurer is 5 level higher then a second one, the damage is 50% increased`() {
-        val firstAdventurer = Adventurer(level = 6)
-        val secondAdventurer = Adventurer.instance()
-        every { actionChecker.canDamage(firstAdventurer, secondAdventurer, 200) } returns true
-
-        CombatManager(actionChecker).damage(firstAdventurer, secondAdventurer, 200)
-
-        assertThat(secondAdventurer.isAlive()).isEqualTo(true)
-        assertThat(secondAdventurer.health).isEqualTo(600)
-    }
-
-    @Test
-    fun `when an adventurer is 5 level lower then a second one, the damage is reduced by 50%`() {
-        val firstAdventurer = Adventurer.instance()
-        val secondAdventurer = Adventurer(level = 6)
-        every { actionChecker.canDamage(firstAdventurer, secondAdventurer, 200) } returns true
-
-        CombatManager(actionChecker).damage(firstAdventurer, secondAdventurer, 200)
-
-        assertThat(secondAdventurer.isAlive()).isEqualTo(true)
-        assertThat(secondAdventurer.health).isEqualTo(900)
-    }
-
-
-
-    @Test
     fun `an adventurer that heals restore the target health'`() {
         val adventurer = Adventurer(health = 500)
         every { actionChecker.canHeal(adventurer, 100) } returns true
 
-        CombatManager(actionChecker).heal(adventurer, 100)
+        CombatManager(actionChecker, damageCalculator).heal(adventurer, 100)
 
         assertThat(adventurer.isAlive()).isEqualTo(true)
         assertThat(adventurer.health).isEqualTo(600)
@@ -88,7 +65,7 @@ class CombatManagerTest {
         val adventurer = Adventurer(health = 900)
         every { actionChecker.canHeal(adventurer, 200) } returns true
 
-        CombatManager(actionChecker).heal(adventurer, 200)
+        CombatManager(actionChecker, damageCalculator).heal(adventurer, 200)
 
         assertThat(adventurer.isAlive()).isEqualTo(true)
         assertThat(adventurer.health).isEqualTo(1000)

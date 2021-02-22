@@ -1,18 +1,11 @@
 package com.combat
 
-class CombatManager() {
+class CombatManager(private val actionChecker: ActionChecker) {
 
     fun damage(firstAdventurer: Adventurer, damagedAdventurer: Adventurer, damageAmount: Int) {
-        if(canDamageOrThrow(firstAdventurer, damagedAdventurer, damageAmount)) {
+        if(actionChecker.canDamage(firstAdventurer, damagedAdventurer, damageAmount)) {
             inflictDamage(firstAdventurer, damagedAdventurer, damageAmount)
         }
-    }
-
-    private fun canDamageOrThrow(firstAdventurer: Adventurer, damagedAdventurer: Adventurer, damageAmount: Int): Boolean {
-        if(firstAdventurer === damagedAdventurer) {
-            throw IllegalCombatAction()
-        }
-        return damageAmount > 0
     }
 
     private fun inflictDamage(firstAdventurer: Adventurer, secondAdventurer: Adventurer, damageAmount: Int) {

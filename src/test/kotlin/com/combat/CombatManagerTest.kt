@@ -65,6 +65,17 @@ class CombatManagerTest {
     }
 
     @Test
+    fun `when an adventurer is 5 level lower then a second one, the damage is reduced by 50%`() {
+        val firstAdventurer = Adventurer.instance()
+        val secondAdventurer = Adventurer(level = 6)
+
+        CombatManager().damage(firstAdventurer, secondAdventurer, 200)
+
+        assertThat(secondAdventurer.isAlive()).isEqualTo(true)
+        assertThat(secondAdventurer.health).isEqualTo(900)
+    }
+
+    @Test
     fun `an adventurer can't heal a dead Adventurer'`() {
         val adventurer = Adventurer(health = 0)
 

@@ -32,6 +32,9 @@ class CombatManager() {
         if(firstAdventurer.level - secondAdventurer.level >= 5) {
             damage *= 2
         }
+        if(secondAdventurer.level - firstAdventurer.level >= 5) {
+            damage /= 2
+        }
         return damage
     }
 

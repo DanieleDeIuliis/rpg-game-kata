@@ -2,10 +2,17 @@ package com.combat
 
 class CombatManager() {
 
-    fun damage(damagedAdventurer: Adventurer, damageAmount: Int) {
-        if(damageAmount > 0) {
+    fun damage(firstAdventurer: Adventurer, damagedAdventurer: Adventurer, damageAmount: Int) {
+        if(canDamageOrThrow(firstAdventurer, damagedAdventurer, damageAmount)) {
             inflictDamage(damageAmount, damagedAdventurer)
         }
+    }
+
+    private fun canDamageOrThrow(firstAdventurer: Adventurer, damagedAdventurer: Adventurer, damageAmount: Int): Boolean {
+        if(firstAdventurer === damagedAdventurer) {
+            throw IllegalCombatAction()
+        }
+        return damageAmount > 0
     }
 
     private fun inflictDamage(damageAmount: Int, damagedAdventurer: Adventurer) {

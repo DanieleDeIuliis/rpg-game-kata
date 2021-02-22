@@ -2,6 +2,7 @@ package com.combat
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 
 class CombatManagerTest {
 
@@ -16,27 +17,37 @@ class CombatManagerTest {
 
     @Test
     fun `an adventurer can't inflict a negative damage`() {
+        val firstAdventurer = Adventurer.instance()
         val secondAdventurer = Adventurer.instance()
 
-        CombatManager().damage(secondAdventurer, -100)
+        CombatManager().damage(firstAdventurer, secondAdventurer, -100)
 
         assertThat(secondAdventurer.health).isEqualTo(1000)
     }
 
     @Test
     fun `an adventurer can damage another one`() {
+        val firstAdventurer = Adventurer.instance()
         val secondAdventurer = Adventurer.instance()
 
-        CombatManager().damage(secondAdventurer, 100)
+        CombatManager().damage(firstAdventurer, secondAdventurer, 100)
 
         assertThat(secondAdventurer.health).isEqualTo(900)
     }
 
     @Test
+    fun `an adventurer can't damage himself`() {
+        val firstAdventurer = Adventurer.instance()
+
+        assertThrows<IllegalCombatAction> { CombatManager().damage(firstAdventurer, firstAdventurer, 200) }
+    }
+
+    @Test
     fun `when an adventurer gets a damage greater than its health, it dies with health equals to zero`() {
+        val firstAdventurer = Adventurer.instance()
         val secondAdventurer = Adventurer.instance()
 
-        CombatManager().damage(secondAdventurer, 2000)
+        CombatManager().damage(firstAdventurer, secondAdventurer, 2000)
 
         assertThat(secondAdventurer.isAlive()).isEqualTo(false)
         assertThat(secondAdventurer.health).isEqualTo(0)

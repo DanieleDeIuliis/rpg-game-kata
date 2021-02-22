@@ -4,7 +4,7 @@ class CombatManager() {
 
     fun damage(firstAdventurer: Adventurer, damagedAdventurer: Adventurer, damageAmount: Int) {
         if(canDamageOrThrow(firstAdventurer, damagedAdventurer, damageAmount)) {
-            inflictDamage(damageAmount, damagedAdventurer)
+            inflictDamage(firstAdventurer, damagedAdventurer, damageAmount)
         }
     }
 
@@ -15,11 +15,24 @@ class CombatManager() {
         return damageAmount > 0
     }
 
-    private fun inflictDamage(damageAmount: Int, damagedAdventurer: Adventurer) {
-        damagedAdventurer.health -= damageAmount
-        if(damagedAdventurer.health < 0) {
-            damagedAdventurer.health = 0
+    private fun inflictDamage(firstAdventurer: Adventurer, secondAdventurer: Adventurer, damageAmount: Int) {
+        val damageAfterLevelCalculation = computeDamageBasedOnLevel(firstAdventurer, secondAdventurer, damageAmount)
+        secondAdventurer.health -= damageAfterLevelCalculation
+        if(secondAdventurer.health < 0) {
+            secondAdventurer.health = 0
         }
+    }
+
+    private fun computeDamageBasedOnLevel(
+        firstAdventurer: Adventurer,
+        secondAdventurer: Adventurer,
+        damageAmount: Int
+    ): Int {
+        var damage = damageAmount
+        if(firstAdventurer.level - secondAdventurer.level >= 5) {
+            damage *= 2
+        }
+        return damage
     }
 
     fun heal(adventurer: Adventurer, healAmount: Int) {

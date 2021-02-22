@@ -37,9 +37,9 @@ class CombatManagerTest {
 
     @Test
     fun `an adventurer can't damage himself`() {
-        val firstAdventurer = Adventurer.instance()
+        val adventurer = Adventurer.instance()
 
-        assertThrows<IllegalCombatAction> { CombatManager().damage(firstAdventurer, firstAdventurer, 200) }
+        assertThrows<IllegalCombatAction> { CombatManager().damage(adventurer, adventurer, 200) }
     }
 
     @Test
@@ -54,41 +54,52 @@ class CombatManagerTest {
     }
 
     @Test
+    fun `when an adventurer is 5 level higher then a second one, the damage is 50% increased`() {
+        val firstAdventurer = Adventurer(level = 6)
+        val secondAdventurer = Adventurer.instance()
+
+        CombatManager().damage(firstAdventurer, secondAdventurer, 200)
+
+        assertThat(secondAdventurer.isAlive()).isEqualTo(true)
+        assertThat(secondAdventurer.health).isEqualTo(600)
+    }
+
+    @Test
     fun `an adventurer can't heal a dead Adventurer'`() {
-        val secondAdventurer = Adventurer(health = 0)
+        val adventurer = Adventurer(health = 0)
 
-        CombatManager().heal(secondAdventurer, 100)
+        CombatManager().heal(adventurer, 100)
 
-        assertThat(secondAdventurer.isAlive()).isEqualTo(false)
-        assertThat(secondAdventurer.health).isEqualTo(0)
+        assertThat(adventurer.isAlive()).isEqualTo(false)
+        assertThat(adventurer.health).isEqualTo(0)
     }
 
     @Test
     fun `an adventurer can't heal a negative damage`() {
-        val secondAdventurer = Adventurer.instance()
+        val adventurer = Adventurer.instance()
 
-        CombatManager().heal(secondAdventurer, -100)
+        CombatManager().heal(adventurer, -100)
 
-        assertThat(secondAdventurer.health).isEqualTo(1000)
+        assertThat(adventurer.health).isEqualTo(1000)
     }
 
     @Test
     fun `an adventurer that heals can't restore health to a value grater than the maximum amount'`() {
-        val secondAdventurer = Adventurer(health = 900)
+        val adventurer = Adventurer(health = 900)
 
-        CombatManager().heal(secondAdventurer, 200)
+        CombatManager().heal(adventurer, 200)
 
-        assertThat(secondAdventurer.isAlive()).isEqualTo(true)
-        assertThat(secondAdventurer.health).isEqualTo(1000)
+        assertThat(adventurer.isAlive()).isEqualTo(true)
+        assertThat(adventurer.health).isEqualTo(1000)
     }
 
     @Test
     fun `an adventurer that heals restore the target health'`() {
-        val secondAdventurer = Adventurer(health = 500)
+        val adventurer = Adventurer(health = 500)
 
-        CombatManager().heal(secondAdventurer, 100)
+        CombatManager().heal(adventurer, 100)
 
-        assertThat(secondAdventurer.isAlive()).isEqualTo(true)
-        assertThat(secondAdventurer.health).isEqualTo(600)
+        assertThat(adventurer.isAlive()).isEqualTo(true)
+        assertThat(adventurer.health).isEqualTo(600)
     }
 }

@@ -1,6 +1,6 @@
 package com.combat
 
-class Adventurer(var health: Int = 1000, val level: Int = 1) {
+class Adventurer(var health: Int = 1000, var level: Int = 1) {
 
     companion object {
         const val TOTAL_HEALTH = 1000

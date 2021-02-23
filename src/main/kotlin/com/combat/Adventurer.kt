@@ -4,7 +4,6 @@ class Adventurer(val range: RANGE = RANGE.MELEE, val position: Position = Positi
 
     var health: Int = TOTAL_HEALTH
     var level: Int = STARTER_LEVEL
-        private set
 
     companion object {
         const val TOTAL_HEALTH = 1000
@@ -12,10 +11,5 @@ class Adventurer(val range: RANGE = RANGE.MELEE, val position: Position = Positi
     }
 
     fun isAlive(): Boolean = health > 0
-
-    fun increaseLevelBy(levelUp: Int) {
-        level += levelUp
-    }
-
 }
 

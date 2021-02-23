@@ -2,12 +2,12 @@ package com.combat
 
 class Adventurer(
     val range: RANGE = RANGE.MELEE,
-    val position: Position = Position(0, 0),
-    private val factions: MutableList<Faction> = mutableListOf()
+    val position: Position = Position(0, 0)
 ) {
 
     var health: Int = TOTAL_HEALTH
     var level: Int = STARTER_LEVEL
+    private val factions: MutableList<Faction> = mutableListOf()
 
     companion object {
         const val TOTAL_HEALTH = 1000

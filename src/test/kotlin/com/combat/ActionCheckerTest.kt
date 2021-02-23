@@ -70,9 +70,11 @@ class ActionCheckerTest {
 
     @Test
     fun `an adventurer can heal an ally`() {
-        val faction: Faction = mockk()
-        val firstAdventurer = Adventurer(factions = mutableListOf(faction))
-        val secondAdventurer = Adventurer(factions = mutableListOf(faction))
+        val faction: Faction = mockk(relaxed = true)
+        val firstAdventurer = Adventurer()
+        firstAdventurer.join(faction)
+        val secondAdventurer = Adventurer()
+        secondAdventurer.join(faction)
         every { alliesChecker.areAllies(firstAdventurer, secondAdventurer) } returns true
 
         assertTrue(ActionChecker(positionChecker, alliesChecker).canHeal(firstAdventurer, secondAdventurer, 200))
@@ -80,9 +82,11 @@ class ActionCheckerTest {
 
     @Test
     fun `an adventurer can not heal a non ally`() {
-        val faction: Faction = mockk()
-        val firstAdventurer = Adventurer(factions = mutableListOf(faction))
-        val secondAdventurer = Adventurer(factions = mutableListOf(Faction()))
+        val faction: Faction = mockk(relaxed = true)
+        val firstAdventurer = Adventurer()
+        firstAdventurer.join(faction)
+        val secondAdventurer = Adventurer()
+        secondAdventurer.join(faction)
         every { alliesChecker.areAllies(firstAdventurer, secondAdventurer) } returns false
 
         assertFalse(ActionChecker(positionChecker, alliesChecker).canHeal(firstAdventurer, secondAdventurer, 200))

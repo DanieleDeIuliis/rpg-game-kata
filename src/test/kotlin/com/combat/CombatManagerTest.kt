@@ -52,7 +52,7 @@ class CombatManagerTest {
 
     @Test
     fun `an adventurer that heals restore the target health'`() {
-        val adventurer = Adventurer(health = 500, range = MELEE)
+        val adventurer = Adventurer(health = 500, range = MELEE, position = Position(0,0))
         every { actionChecker.canHeal(adventurer, 100) } returns true
 
         CombatManager(actionChecker, damageCalculator).heal(adventurer, 100)
@@ -63,7 +63,7 @@ class CombatManagerTest {
 
     @Test
     fun `an adventurer that heals can't restore health to a value grater than the maximum amount`() {
-        val adventurer = Adventurer(health = 900, range = MELEE)
+        val adventurer = Adventurer(health = 900, range = MELEE, position = Position(0,0))
         every { actionChecker.canHeal(adventurer, 200) } returns true
 
         CombatManager(actionChecker, damageCalculator).heal(adventurer, 200)

@@ -1,18 +1,24 @@
 package com.combat
 
-class Adventurer(var level: Int = 1, val range: RANGE, val position: Position) {
+class Adventurer(val range: RANGE, val position: Position) {
 
     var health: Int = TOTAL_HEALTH
+    var level: Int = STARTER_LEVEL
+        private set
 
     companion object {
         const val TOTAL_HEALTH = 1000
         const val STARTER_LEVEL = 1
         fun instance(range: RANGE = RANGE.MELEE, position: Position = Position(0,0)): Adventurer {
-            return Adventurer(STARTER_LEVEL, range, position)
+            return Adventurer(range, position)
         }
     }
 
     fun isAlive(): Boolean = health > 0
+
+    fun increaseLevelBy(levelUp: Int) {
+        level += levelUp
+    }
 
 }
 

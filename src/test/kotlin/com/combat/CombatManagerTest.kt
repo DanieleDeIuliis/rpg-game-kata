@@ -13,8 +13,8 @@ class CombatManagerTest {
 
     @Test
     fun `when can deal damage, an adventurer damages another one`() {
-        val firstAdventurer = Adventurer.instance()
-        val secondAdventurer = Adventurer.instance()
+        val firstAdventurer = Adventurer()
+        val secondAdventurer = Adventurer()
         every { actionChecker.canDamage(firstAdventurer, secondAdventurer, 200) } returns true
         every { damageCalculator.computeDamageBasedOnLevel(firstAdventurer, secondAdventurer, 200) } returns 200
 
@@ -26,8 +26,8 @@ class CombatManagerTest {
 
     @Test
     fun `when can't deal damage, an adventurer does not damage another one`() {
-        val firstAdventurer = Adventurer.instance()
-        val secondAdventurer = Adventurer.instance()
+        val firstAdventurer = Adventurer()
+        val secondAdventurer = Adventurer()
         every { actionChecker.canDamage(firstAdventurer, secondAdventurer, -200) } returns false
 
         CombatManager(actionChecker, damageCalculator).damage(firstAdventurer, secondAdventurer, -200)
@@ -38,8 +38,8 @@ class CombatManagerTest {
 
     @Test
     fun `when an adventurer gets a damage greater than its health, it dies with health equals to zero`() {
-        val firstAdventurer = Adventurer.instance()
-        val secondAdventurer = Adventurer.instance()
+        val firstAdventurer = Adventurer()
+        val secondAdventurer = Adventurer()
         every { actionChecker.canDamage(firstAdventurer, secondAdventurer, 2000) } returns true
         every { damageCalculator.computeDamageBasedOnLevel(firstAdventurer, secondAdventurer, 2000) } returns 2000
 
@@ -72,7 +72,7 @@ class CombatManagerTest {
     }
 
     private fun getADamagedAdventurer(damageAmount: Int): Adventurer {
-        val adventurer = Adventurer.instance()
+        val adventurer = Adventurer()
         every { actionChecker.canDamage(any(), any(), any()) } returns true
         every { damageCalculator.computeDamageBasedOnLevel(any(), any(), any()) } returns damageAmount
         CombatManager(actionChecker, damageCalculator).damage(adventurer, adventurer, damageAmount)

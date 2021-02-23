@@ -1,6 +1,6 @@
 package com.combat
 
-class Adventurer(val range: RANGE, val position: Position) {
+class Adventurer(val range: RANGE = RANGE.MELEE, val position: Position = Position(0,0)) {
 
     var health: Int = TOTAL_HEALTH
     var level: Int = STARTER_LEVEL
@@ -9,9 +9,6 @@ class Adventurer(val range: RANGE, val position: Position) {
     companion object {
         const val TOTAL_HEALTH = 1000
         const val STARTER_LEVEL = 1
-        fun instance(range: RANGE = RANGE.MELEE, position: Position = Position(0,0)): Adventurer {
-            return Adventurer(range, position)
-        }
     }
 
     fun isAlive(): Boolean = health > 0

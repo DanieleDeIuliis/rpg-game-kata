@@ -51,6 +51,31 @@ class CombatManagerTest {
     }
 
     @Test
+    fun `an adventurer can damage an item`() {
+        val firstAdventurer = Adventurer()
+        val item = Item(health = 1500)
+        every { actionChecker.canDamage(firstAdventurer, item, 200) } returns true
+        every { damageCalculator.computeDamageBasedOnLevel(firstAdventurer, item, 200) } returns 200
+
+        CombatManager(actionChecker, damageCalculator).damage(firstAdventurer, item, 200)
+
+        assertThat(item.health).isEqualTo(1300)
+    }
+
+    @Test
+    fun `an item that receives a damage greater than its health is destroyed`() {
+        val firstAdventurer = Adventurer()
+        val item = Item(health = 1500)
+        every { actionChecker.canDamage(firstAdventurer, item, 2000) } returns true
+        every { damageCalculator.computeDamageBasedOnLevel(firstAdventurer, item, 2000) } returns 2000
+
+        CombatManager(actionChecker, damageCalculator).damage(firstAdventurer, item, 2000)
+
+        assertTrue(item.isDestroyed())
+        assertThat(item.health).isEqualTo(0)
+    }
+
+    @Test
     fun `an adventurer that heals restore the target health'`() {
         val adventurer = getADamagedAdventurer(500)
         every { actionChecker.canHeal(adventurer, 100) } returns true

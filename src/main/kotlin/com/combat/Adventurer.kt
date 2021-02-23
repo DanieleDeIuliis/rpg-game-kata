@@ -1,12 +1,5 @@
 package com.combat
 
-interface TargetableEntity {
-    var health: Int
-    var level: Int
-    val position: Position
-    fun getFactions(): List<Faction>
-}
-
 class Adventurer(
     val range: RANGE = RANGE.MELEE,
     override val position: Position = Position(0, 0)

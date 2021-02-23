@@ -1,6 +1,6 @@
 package com.combat
 
-enum class RANGE(val value: Int) {
+enum class Range(val value: Int) {
     MELEE(2),
     RANGED(20)
 }

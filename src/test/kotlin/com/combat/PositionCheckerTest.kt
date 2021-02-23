@@ -1,6 +1,6 @@
 package com.combat
 
-import com.combat.RANGE.*
+import com.combat.Range.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify

@@ -1,7 +1,7 @@
 package com.combat
 
 class Adventurer(
-    val range: RANGE = RANGE.MELEE,
+    val range: Range = Range.MELEE,
     override val position: Position = Position(0, 0)
 ): TargetableEntity {
 

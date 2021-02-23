@@ -1,12 +1,19 @@
 package com.combat
 
+interface TargetableEntity {
+    var health: Int
+    var level: Int
+    val position: Position
+    fun getFactions(): List<Faction>
+}
+
 class Adventurer(
     val range: RANGE = RANGE.MELEE,
-    val position: Position = Position(0, 0)
-) {
+    override val position: Position = Position(0, 0)
+): TargetableEntity {
 
-    var health: Int = TOTAL_HEALTH
-    var level: Int = STARTER_LEVEL
+    override var health: Int = TOTAL_HEALTH
+    override var level: Int = STARTER_LEVEL
     private val factions: MutableList<Faction> = mutableListOf()
 
     companion object {
@@ -32,7 +39,7 @@ class Adventurer(
         }
     }
 
-    fun getFactions(): List<Faction> {
+    override fun getFactions(): List<Faction> {
         return factions
     }
 }

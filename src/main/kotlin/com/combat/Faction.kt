@@ -12,7 +12,7 @@ class Faction(private val members: MutableList<Adventurer> = mutableListOf()) {
         members.remove(adventurer)
     }
 
-    fun hasMember(adventurer: Adventurer): Boolean {
+    fun hasMember(adventurer: TargetableEntity): Boolean {
         return members.contains(adventurer)
     }
 

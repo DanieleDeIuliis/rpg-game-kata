@@ -4,7 +4,7 @@ class DamageCalculator {
 
     fun computeDamageBasedOnLevel(
         firstAdventurer: Adventurer,
-        secondAdventurer: Adventurer,
+        secondAdventurer: TargetableEntity,
         damageAmount: Int
     ): Int {
         var damage = damageAmount

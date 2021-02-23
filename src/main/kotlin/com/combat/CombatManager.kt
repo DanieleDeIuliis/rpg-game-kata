@@ -2,13 +2,13 @@ package com.combat
 
 class CombatManager(private val actionChecker: ActionChecker, private val damageCalculator: DamageCalculator) {
 
-    fun damage(firstAdventurer: Adventurer, damagedAdventurer: Adventurer, damageAmount: Int) {
+    fun damage(firstAdventurer: Adventurer, damagedAdventurer: TargetableEntity, damageAmount: Int) {
         if(actionChecker.canDamage(firstAdventurer, damagedAdventurer, damageAmount)) {
             inflictDamage(firstAdventurer, damagedAdventurer, damageAmount)
         }
     }
 
-    private fun inflictDamage(firstAdventurer: Adventurer, secondAdventurer: Adventurer, damageAmount: Int) {
+    private fun inflictDamage(firstAdventurer: Adventurer, secondAdventurer: TargetableEntity, damageAmount: Int) {
         val damageAfterLevelCalculation = damageCalculator.computeDamageBasedOnLevel(firstAdventurer, secondAdventurer, damageAmount)
         secondAdventurer.health -= damageAfterLevelCalculation
         if(secondAdventurer.health < 0) {

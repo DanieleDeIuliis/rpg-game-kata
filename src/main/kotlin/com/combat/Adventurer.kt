@@ -19,9 +19,3 @@ class Adventurer(val range: RANGE = RANGE.MELEE, val position: Position = Positi
 
 }
 
-data class Position(val colIndex: Int, val rowIndex: Int)
-
-enum class RANGE(val value: Int) {
-    MELEE(2),
-    RANGED(20)
-}

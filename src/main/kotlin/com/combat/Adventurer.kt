@@ -7,7 +7,7 @@ class Adventurer(
 
     override var health: Int = TOTAL_HEALTH
     override var level: Int = STARTER_LEVEL
-    private val factions: MutableList<Faction> = mutableListOf()
+    private val factions: MutableSet<Faction> = mutableSetOf()
 
     companion object {
         const val TOTAL_HEALTH = 1000
@@ -17,22 +17,18 @@ class Adventurer(
     fun isAlive(): Boolean = health > 0
 
     fun join(faction: Faction) {
-        if(factions.contains(faction)) {
-            return
+        if(factions.add(faction)) {
+            faction.join(this)
         }
-
-        faction.join(this)
-        factions.add(faction)
     }
 
     fun leave(faction: Faction) {
-        if(factions.contains(faction)) {
+        if(factions.remove(faction)) {
             faction.remove(this)
-            factions.remove(faction)
         }
     }
 
-    fun getFactions(): List<Faction> {
+    fun getFactions(): Set<Faction> {
         return factions
     }
 }

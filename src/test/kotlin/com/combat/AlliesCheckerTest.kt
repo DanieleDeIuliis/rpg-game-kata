@@ -27,12 +27,11 @@ class AlliesCheckerTest {
         val firstAdventurer = Adventurer()
         firstAdventurer.join(Faction())
         firstAdventurer.join(Faction())
-        val secondAdventurer = Adventurer()
-        secondAdventurer.join(faction)
+        val item = Item(health = 1000)
         every { faction.hasMember(any()) } returns true
 
         val alliesChecker = AlliesChecker()
 
-        assertFalse(alliesChecker.areAllies(firstAdventurer, secondAdventurer))
+        assertFalse(alliesChecker.areAllies(firstAdventurer, item))
     }
 }

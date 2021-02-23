@@ -32,7 +32,7 @@ class Adventurer(
         }
     }
 
-    override fun getFactions(): List<Faction> {
+    fun getFactions(): List<Faction> {
         return factions
     }
 }

@@ -9,13 +9,14 @@ import kotlin.test.assertFalse
 class ActionCheckerTest {
 
     private val positionChecker: PositionChecker = mockk()
+    private val alliesChecker: AlliesChecker = mockk()
 
     @Test
     fun `an adventurer can't damage himself`() {
         val adventurer = Adventurer()
         every { positionChecker.areInRange(adventurer, adventurer) } returns true
 
-        assertThrows<IllegalCombatAction> { ActionChecker(positionChecker).canDamage(adventurer, adventurer, 100) }
+        assertThrows<IllegalCombatAction> { ActionChecker(positionChecker, alliesChecker).canDamage(adventurer, adventurer, 100) }
     }
 
     @Test
@@ -24,7 +25,7 @@ class ActionCheckerTest {
         val secondAdventurer = Adventurer()
         every { positionChecker.areInRange(firstAdventurer, secondAdventurer) } returns true
 
-        val canDamage = ActionChecker(positionChecker).canDamage(firstAdventurer, secondAdventurer, -100)
+        val canDamage = ActionChecker(positionChecker, alliesChecker).canDamage(firstAdventurer, secondAdventurer, -100)
 
         assertFalse(canDamage)
     }
@@ -35,7 +36,19 @@ class ActionCheckerTest {
         val secondAdventurer = Adventurer()
         every { positionChecker.areInRange(firstAdventurer, secondAdventurer) } returns false
 
-        val canDamage = ActionChecker(positionChecker).canDamage(firstAdventurer, secondAdventurer, -100)
+        val canDamage = ActionChecker(positionChecker, alliesChecker).canDamage(firstAdventurer, secondAdventurer, -100)
+
+        assertFalse(canDamage)
+    }
+
+    @Test
+    fun `an adventurer can't damage an ally`() {
+        val firstAdventurer = Adventurer()
+        val secondAdventurer = Adventurer()
+        every { positionChecker.areInRange(firstAdventurer, secondAdventurer) } returns true
+        every { alliesChecker.areAllies(firstAdventurer, secondAdventurer) } returns true
+
+        val canDamage = ActionChecker(positionChecker, alliesChecker).canDamage(firstAdventurer, secondAdventurer, 100)
 
         assertFalse(canDamage)
     }
@@ -44,14 +57,14 @@ class ActionCheckerTest {
     fun `an adventurer can't heal a dead Adventurer'`() {
         val adventurer = getADeadAdventurer()
 
-        assertFalse(ActionChecker(positionChecker).canHeal(adventurer, 200))
+        assertFalse(ActionChecker(positionChecker, alliesChecker).canHeal(adventurer, 200))
     }
 
     @Test
     fun `an adventurer can't heal a negative damage`() {
         val adventurer = Adventurer()
 
-        assertFalse(ActionChecker(positionChecker).canHeal(adventurer, -200))
+        assertFalse(ActionChecker(positionChecker, alliesChecker).canHeal(adventurer, -200))
     }
 
     private fun getADeadAdventurer(): Adventurer {

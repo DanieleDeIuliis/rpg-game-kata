@@ -31,5 +31,9 @@ class Adventurer(
             factions.remove(faction)
         }
     }
+
+    fun getFactions(): List<Faction> {
+        return factions
+    }
 }
 

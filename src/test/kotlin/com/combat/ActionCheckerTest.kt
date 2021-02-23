@@ -42,7 +42,7 @@ class ActionCheckerTest {
 
     @Test
     fun `an adventurer can't heal a dead Adventurer'`() {
-        val adventurer = Adventurer(health = 0, range = RANGE.MELEE, position = Position(0,0))
+        val adventurer = getADeadAdventurer()
 
         assertFalse(ActionChecker(positionChecker).canHeal(adventurer, 200))
     }
@@ -52,6 +52,17 @@ class ActionCheckerTest {
         val adventurer = Adventurer.instance()
 
         assertFalse(ActionChecker(positionChecker).canHeal(adventurer, -200))
+    }
+
+    private fun getADeadAdventurer(): Adventurer {
+        val adventurer = Adventurer.instance()
+        val actionChecker: ActionChecker = mockk()
+        val damageCalculator: DamageCalculator = mockk()
+        every { actionChecker.canDamage(any(), any(), any()) } returns true
+        every { damageCalculator.computeDamageBasedOnLevel(any(), any(), any()) } returns 1000
+
+        CombatManager(actionChecker, damageCalculator).damage(adventurer, adventurer, 1000)
+        return adventurer
     }
 
 }

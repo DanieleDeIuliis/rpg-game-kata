@@ -5,6 +5,7 @@ import io.mockk.mockk
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertFalse
+import kotlin.test.assertTrue
 
 class ActionCheckerTest {
 
@@ -65,6 +66,26 @@ class ActionCheckerTest {
         val adventurer = Adventurer()
 
         assertFalse(ActionChecker(positionChecker, alliesChecker).canHeal(adventurer, -200))
+    }
+
+    @Test
+    fun `an adventurer can heal an ally`() {
+        val faction: Faction = mockk()
+        val firstAdventurer = Adventurer(factions = mutableListOf(faction))
+        val secondAdventurer = Adventurer(factions = mutableListOf(faction))
+        every { alliesChecker.areAllies(firstAdventurer, secondAdventurer) } returns true
+
+        assertTrue(ActionChecker(positionChecker, alliesChecker).canHeal(firstAdventurer, secondAdventurer, 200))
+    }
+
+    @Test
+    fun `an adventurer can not heal a non ally`() {
+        val faction: Faction = mockk()
+        val firstAdventurer = Adventurer(factions = mutableListOf(faction))
+        val secondAdventurer = Adventurer(factions = mutableListOf(Faction()))
+        every { alliesChecker.areAllies(firstAdventurer, secondAdventurer) } returns false
+
+        assertFalse(ActionChecker(positionChecker, alliesChecker).canHeal(firstAdventurer, secondAdventurer, 200))
     }
 
     private fun getADeadAdventurer(): Adventurer {

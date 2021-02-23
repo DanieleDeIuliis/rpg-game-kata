@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import kotlin.test.assertTrue
 
 class CombatManagerTest {
 
@@ -66,6 +67,22 @@ class CombatManagerTest {
         every { actionChecker.canHeal(adventurer, 200) } returns true
 
         CombatManager(actionChecker, damageCalculator).heal(adventurer, 200)
+
+        assertThat(adventurer.isAlive()).isEqualTo(true)
+        assertThat(adventurer.health).isEqualTo(1000)
+    }
+
+    @Test
+    fun `an adventurer can heal another target that is its ally`() {
+        val faction: Faction = mockk(relaxed = true)
+        val adventurer = getADamagedAdventurer(100)
+        val ally = Adventurer()
+        adventurer.join(faction)
+        ally.join(faction)
+
+        every { actionChecker.canHeal(ally, adventurer, 200) } returns true
+
+        CombatManager(actionChecker, damageCalculator).heal(ally, adventurer, 200)
 
         assertThat(adventurer.isAlive()).isEqualTo(true)
         assertThat(adventurer.health).isEqualTo(1000)

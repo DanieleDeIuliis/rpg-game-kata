@@ -1,6 +1,6 @@
 package com.combat
 
-class ActionChecker(private val positionChecker: PositionChecker, val alliesChecker: AlliesChecker) {
+class ActionChecker(private val positionChecker: PositionChecker, private val alliesChecker: AlliesChecker) {
     fun canDamage(firstAdventurer: Adventurer, secondAdventurer: Adventurer, damageAmount: Int): Boolean {
         if(firstAdventurer === secondAdventurer) {
             throw IllegalCombatAction()
@@ -10,4 +10,10 @@ class ActionChecker(private val positionChecker: PositionChecker, val alliesChec
 
     fun canHeal(adventurer: Adventurer, healAmount: Int) = adventurer.isAlive() && healAmount >= 0
 
+    fun canHeal(firstAdventurer: Adventurer, secondAdventurer: Adventurer, healAmount: Int): Boolean {
+        if(alliesChecker.areAllies(firstAdventurer, secondAdventurer)) {
+            return canHeal(secondAdventurer, healAmount)
+        }
+        return false
+    }
 }
